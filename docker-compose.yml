@@ -1,0 +1,22 @@
+services:
+  neo4j:
+    image: neo4j:5.26.22-community
+    container_name: mfg-neo4j
+    ports:
+      - "7474:7474"   # Browser UI
+      - "7687:7687"   # Bolt protocol
+    environment:
+      NEO4J_AUTH: neo4j/TaTc@4221010011
+      NEO4J_PLUGINS: '["apoc","graph-data-science"]'
+      NEO4J_dbms_memory_heap_max__size: 1G
+    volumes:
+      - neo4j_data:/data
+      - ./import:/var/lib/neo4j/import
+    healthcheck:
+      test: ["CMD", "cypher-shell", "-u", "neo4j", "-p", "TaTc@4221010011", "RETURN 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  neo4j_data:
